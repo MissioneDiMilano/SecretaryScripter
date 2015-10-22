@@ -2,6 +2,47 @@ var getMissionaryIDsStringOptionsBoxOpen = false;
 var showMissionaryPicsOptionsBoxOpen = false;
 var showMissionaryRecommendsOptionsBoxOpen = false;
 var showMissionaryProfilesOptionsBoxOpen = false;
+var viewablesCount = null;
+var questionableCount = 20;
+
+function setViewablesCount(count){
+  viewablesCount = count;
+}
+
+function getViewablesCount(count){
+  return viewablesCount;
+}
+
+var start = null;
+function viewablesCountIsNotNull(){
+  if (start == null){ // First time
+    start = new Date();
+    
+  } 
+  if ((new Date() - start) > 2000 || viewablesCount != null){
+    start = null;
+    return true
+  } else {
+    
+    return viewablesCountIsNotNull();
+  }
+}
+
+function passBack(count){
+  setViewablesCount(count);
+  
+}
+
+function confirmCount(verb, noun, finalFunction){
+  chrome.tabs.getSelected(null, function(tab){
+      chrome.tabs.sendMessage(tab.id, {text: "viewablesCount"}, function passBack(viewablesCount){
+        if (viewablesCount < questionableCount || confirm("Are you sure you want to "+verb+" "+viewablesCount.toString()+" "+noun+"?")){
+          finalFunction()
+        }
+      })
+  })
+}
+
 
 document.addEventListener('DOMContentLoaded', function() {
   
@@ -60,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var showMissionaryPics = document.getElementById("showMissionaryPics");
   showMissionaryPics.addEventListener('click', function(tab) {
      chrome.tabs.getSelected(null, function(tab){
-      chrome.tabs.sendMessage(tab.id, { text: "showPics" }, function(stuff){console.log(stuff)});
+      confirmCount("open","pictures", function(){chrome.tabs.sendMessage(tab.id, { text: "showPics" }, function(stuff){console.log(stuff)});})
      })
   }, false);
   
@@ -94,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var showMissionaryRecommends = document.getElementById("showMissionaryRecommends");
   showMissionaryRecommends.addEventListener('click', function(tab) {
      chrome.tabs.getSelected(null, function(tab){
-      chrome.tabs.sendMessage(tab.id, { text: "showRecs" }, function(stuff){console.log(stuff)});
+       confirmCount("open","recommendations",function(){chrome.tabs.sendMessage(tab.id, { text: "showRecs!?"}, function(stuff){console.log(stuff)});})
      })
   }, false);
   
@@ -116,8 +157,9 @@ document.addEventListener('DOMContentLoaded', function() {
   submitShowMissionaryRecommendsWithOptionsButton.addEventListener('click', function(tab) {
     names = document.getElementById("showMissionaryRecommendsNamesInput").value;
      chrome.tabs.getSelected(null, function(tab){
-      chrome.tabs.sendMessage(tab.id, { text: "showRecsOps!?"+ names}, function(stuff){console.log(stuff)});
+        chrome.tabs.sendMessage(tab.id, { text: "showRecsOps!?"+ names}, function(stuff){console.log(stuff)});
      })
+     setViewablesCount(null); // Reset it.
   }, false);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -126,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var showMissionaryProfiles = document.getElementById("showMissionaryProfiles");
   showMissionaryProfiles.addEventListener('click', function(tab) {
      chrome.tabs.getSelected(null, function(tab){
-      chrome.tabs.sendMessage(tab.id, { text: "showProfs" }, function(stuff){console.log(stuff)});
+      confirmCount("open","profiles",function(){chrome.tabs.sendMessage(tab.id, { text: "showProfs" }, function(stuff){console.log(stuff)});})
      })
   }, false);
   

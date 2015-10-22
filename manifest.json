@@ -28,7 +28,7 @@
 		{
 			"run_at": "document_end",
 			"matches": ["<all_urls>"],
-			"js": ["content.js", "jquery.min.js"]
+			"js": ["jquery.min.js", "content.js"]
 		}
 	]
 }

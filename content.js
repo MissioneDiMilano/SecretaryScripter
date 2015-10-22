@@ -159,7 +159,7 @@ function showProfilesWithNameFilter(names){
 var form_target_on_load;
 
 /* Listen for messages */
-chrome.runtime.onMessage.addListener(function(msg, sender) {
+chrome.runtime.onMessage.addListener(function(msg, sender, pipeBack) {
     /* If the received message has the expected format... */
     msgText = msg.text.split("!?")[0];
     msgPayload = msg.text.split("!?").length > 1 ? msg.text.split("!?")[1] : undefined;
@@ -207,6 +207,9 @@ chrome.runtime.onMessage.addListener(function(msg, sender) {
         } else { // it's not, we changed it. Default it.
             setListFormTargetTo(form_target_on_load);
         }
+    } else if (msg.text && msgText == "viewablesCount"){
+        console.log("piping");
+        pipeBack($(".viewable").length);
     }
 });
 
