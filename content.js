@@ -130,8 +130,9 @@ function showProfiles(){
 
 function showProfilesWithNameFilter(names){
     default_target = setListFormTargetBlankReturnDefault();
-    
-    $(".viewable").each(function(i,e){ 
+    var number_of_viewables = 0; 
+    $(".viewable").find(".missionary-link").each(function(i,e){
+       
        if (names.indexOf(e.children[0].innerHTML) >= 0){
                // For some reason, when we submit the form too quickly, we don't get all of the profiles.
                // I think that it is because we are launching the code to open a new page from the form, 
@@ -142,16 +143,14 @@ function showProfilesWithNameFilter(names){
                // new_process, input_mod new_process, input_mod, submit, submit
                // So that the first doesn't get lanunched, and the double submit is ignored?
                // Anyway, by launching each "click" a second apart, you avoid this problem.
-                   var number_of_viewables = 0;
-                    $(".viewable").each(function(i,e){number_of_viewables++; setTimeout(function(){e.children[0].children[0].click();}, i*1000 )});
-    
-                    // We have a similar problem here - if we don't wait to set this back, it's useless.
-                    setTimeout(function(){setListFormTargetTo(default_target)},number_of_viewables++*100                
+               setTimeout(function(){e.click();}, number_of_viewables*1000 );
+               number_of_viewables++;
        } 
        
     });
     
-    setListFormTargetTo(default_target);
+    // We have a similar problem here - if we don't wait to set this back, it's useless.
+    setTimeout(function(){setListFormTargetTo(default_target)},number_of_viewables++*1000);  
 }
 
 
@@ -191,6 +190,7 @@ chrome.runtime.onMessage.addListener(function(msg, sender) {
     } else if (msg.text && msgText == "showProfs"){
         showProfiles();
     } else if (msg.text && msgText == "showProfsOps"){
+        console.log("hello?");
         if (msgPayload){
             names = msgPayload;
             names = names.replace(/\t/g,", ");

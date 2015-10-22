@@ -10,6 +10,10 @@
 	display: none;
 }
 
+#showMissionaryProfilesOptionsBox {
+	display: none;
+}
+
 body {
 	min-width: 400px;
 	min-height: 250px;

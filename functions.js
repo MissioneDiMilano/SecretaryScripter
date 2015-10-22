@@ -1,6 +1,6 @@
 var getMissionaryIDsStringOptionsBoxOpen = false;
 var showMissionaryPicsOptionsBoxOpen = false;
-var showMissionaryRecsOptionsBoxOpen = false;
+var showMissionaryRecommendsOptionsBoxOpen = false;
 var showMissionaryProfilesOptionsBoxOpen = false;
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -119,8 +119,6 @@ document.addEventListener('DOMContentLoaded', function() {
       chrome.tabs.sendMessage(tab.id, { text: "showRecsOps!?"+ names}, function(stuff){console.log(stuff)});
      })
   }, false);
-  
-}, false);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -146,8 +144,9 @@ document.addEventListener('DOMContentLoaded', function() {
   }, false);
   
   // Show all Missionary Profiles with Options
-  var submitshowMissionaryProfilesWithOptionsButton = document.getElementById("submitshowMissionaryProfilesWithOptions");
+  var submitshowMissionaryProfilesWithOptionsButton = document.getElementById("submitShowMissionaryProfilesWithOptions");
   submitshowMissionaryProfilesWithOptionsButton.addEventListener('click', function(tab) {
+    console.log("test");
     names = document.getElementById("showMissionaryProfilesNamesInput").value;
      chrome.tabs.getSelected(null, function(tab){
       chrome.tabs.sendMessage(tab.id, { text: "showProfsOps!?"+ names}, function(stuff){console.log(stuff)});
