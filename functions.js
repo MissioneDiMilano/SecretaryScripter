@@ -144,13 +144,31 @@ document.addEventListener('DOMContentLoaded', function() {
   }, false);
   
   // Show all Missionary Profiles with Options
-  var submitshowMissionaryProfilesWithOptionsButton = document.getElementById("submitShowMissionaryProfilesWithOptions");
-  submitshowMissionaryProfilesWithOptionsButton.addEventListener('click', function(tab) {
+  var submitShowMissionaryProfilesWithOptionsButton = document.getElementById("submitShowMissionaryProfilesWithOptions");
+  submitShowMissionaryProfilesWithOptionsButton.addEventListener('click', function(tab) {
     console.log("test");
     names = document.getElementById("showMissionaryProfilesNamesInput").value;
      chrome.tabs.getSelected(null, function(tab){
       chrome.tabs.sendMessage(tab.id, { text: "showProfsOps!?"+ names}, function(stuff){console.log(stuff)});
      })
+  }, false);
+  
+  // Toggle the target of the list so that it opens either in new tab or not.
+  var toggleFormTargetButton = document.getElementById("toggleFormTarget");
+  var is_blank = false;
+  toggleFormTargetButton.addEventListener("click", function(tab){
+    chrome.tabs.getSelected(null, function(tab){
+        chrome.tabs.sendMessage(tab.id, { text: "toggleFormTarget"}, function(stuff){
+              console.log(stuff);
+          })
+        });
+    if (is_blank){
+      document.getElementById("formTargetChange").innerHTML = "new";
+      is_blank = false;
+    } else {
+      document.getElementById("formTargetChange").innerHTML = "same";
+      is_blank = true;
+    }
   }, false);
   
 }, false);

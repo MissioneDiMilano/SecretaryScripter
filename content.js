@@ -99,8 +99,12 @@ function showRecsWithNameFilter(names){
     })
 }
 
+function getListFormTarget(){
+    return $("#listForm").attr("target");
+}
+
 function setListFormTargetBlankReturnDefault(){
-    x = $("#listForm").attr("target");
+    x = getListFormTarget();
     $("#listForm").attr("target","_blank");
     return x;
 }
@@ -146,13 +150,13 @@ function showProfilesWithNameFilter(names){
                setTimeout(function(){e.click();}, number_of_viewables*1000 );
                number_of_viewables++;
        } 
-       
     });
     
     // We have a similar problem here - if we don't wait to set this back, it's useless.
     setTimeout(function(){setListFormTargetTo(default_target)},number_of_viewables++*1000);  
 }
 
+var form_target_on_load;
 
 /* Listen for messages */
 chrome.runtime.onMessage.addListener(function(msg, sender) {
@@ -197,12 +201,19 @@ chrome.runtime.onMessage.addListener(function(msg, sender) {
             names = names.split("\n");
             showProfilesWithNameFilter(names)
         }
+    } else if (msg.text && msgText == "toggleFormTarget"){
+        if (form_target_on_load == getListFormTarget()){ // is the same as on load.
+            setListFormTargetBlankReturnDefault();
+        } else { // it's not, we changed it. Default it.
+            setListFormTargetTo(form_target_on_load);
+        }
     }
 });
 
 // For checking on certain pages.
 
 setTimeout(function(){
+    form_target_on_load = getListFormTarget(); // We want to wait until we load for this.
     if ($("#listForm").length > 0){ // if we have this, we are on the IMOS Missionary Roster page.
         document.title = document.title + "kcbListForm";
     }},1000);
