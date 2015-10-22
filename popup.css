@@ -1,0 +1,46 @@
+#getMissionaryIDsStringOptionsBox {
+	display: none;
+}
+
+#showMissionaryPicsOptionsBox {
+	display: none;
+}
+
+#showMissionaryRecommendsOptionsBox {
+	display: none;
+}
+
+body {
+	min-width: 400px;
+	min-height: 250px;
+	padding-top: 70px;
+}
+
+.full {
+	width: 100%;
+}
+
+.text-input-box {
+	min-height: 100px;
+}
+
+.toggling {
+	padding: 20px;
+}
+
+#missionary-list-page-options {
+	display: none;
+}
+
+.page-options {
+	display: none;
+}
+
+.navbar-inverse {
+	height: 60px !important;
+}
+
+.navbar-brand {
+	width: 100%;
+	text-align: right;
+}

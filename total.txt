@@ -1,0 +1,309 @@
+{
+	"manifest_version": 2,
+	
+	"name": "SecretaryScripter",
+	"description":"This extension allows you to quickly run pre-written useful javascript scripts on the internet.",
+	"version":"1.0",
+	
+	
+	"browser_action": {
+		
+		"default_popup": "popup.html",
+		"default_icon": "MdM128.png"
+	},
+	
+	"icons": {
+		  "16": "MdM16.png",
+		  "32": "MdM32.png",
+          "64": "MdM64.png",
+          "128": "MdM128.png"
+	},
+	
+	"permissions": [
+		"activeTab",
+		"tabs"
+	],
+	
+	"content_scripts": [
+		{
+			"run_at": "document_end",
+			"matches": ["<all_urls>"],
+			"js": ["content.js", "jquery.min.js"]
+		}
+	]
+}function getMIDs(){
+    concated = ""
+    total_concats = 0;
+    $('.viewable').find(".missionary-link").each(function(i,e){total_concats = i; m_id = e.attributes[1].textContent.toString().match(/\'missionaryId\':\'[0-9]+\'/).toString().match(/[0-9]+/); concated=concated+m_id+":"})
+    console.log(concated);
+    concated = concated.substring(0,concated.length-1);
+    var node = document.createElement("input");
+    node.id = "hidden_id_generator";
+    document.body.appendChild(node);
+    $("#hidden_id_generator").val(concated);
+    document.querySelector("#hidden_id_generator").select();
+    document.execCommand('copy');
+    console.log(concated);
+    $("#hidden_id_generator").remove();
+    alert((total_concats++).toString()+" numbers copied to the clipboard (or go get it from the console if not).");
+    return concated;
+}
+
+function getMIDsWithNameFilter(names){
+    for (i = 0; i < names.length; i++){
+        names[i] = names[i].trim();
+    }
+    concated = ""
+    total_concats = 0;
+
+    //tmpNames = "";
+
+
+    $('.viewable').find(".missionary-link").each(function(i,e){
+        
+        // Check that the name is in the list. Otherwise don't do anything.
+        if (names.indexOf(e.children[0].innerHTML) >= 0){
+            total_concats++; 
+            m_id = e.attributes[1].textContent.toString().match(/\'missionaryId\':\'[0-9]+\'/).toString().match(/[0-9]+/);
+            concated=concated+m_id+":"
+            //tmpNames = tmpNames + e.children[0].innerHTML + "   ";
+        }  
+    })
+    //console.log(tmpNames);
+    //console.log(concated);
+    concated = concated.substring(0,concated.length-1);
+    var node = document.createElement("input");
+    node.id = "hidden_id_generator";
+    document.body.appendChild(node);
+    $("#hidden_id_generator").val(concated);
+    document.querySelector("#hidden_id_generator").select();
+    document.execCommand('copy');
+    console.log(concated);
+    $("#hidden_id_generator").remove();
+    alert((total_concats++).toString()+" numbers copied to the clipboard (or go get it from the console if not).");
+    return concated;
+}
+
+function showPics(){
+    
+    $('.viewable').find(".missionary-link").each(function(i,e){
+        m_id = e.attributes[1].textContent.toString().match(/\'missionaryId\':\'[0-9]+\'/).toString().match(/[0-9]+/);
+        m_w = window.open("https://imos.ldschurch.org/imos/imageResource?imageType=MISSIONARY_PROFILE&imageId="+m_id, "_blank");
+        m_w.focus();
+    })
+
+}
+
+function showPicsWithNameFilter(names){
+    $('.viewable').find(".missionary-link").each(function(i,e){
+        
+        // Check that the name is in the list. Otherwise don't do anything.
+        if (names.indexOf(e.children[0].innerHTML) >= 0){
+            total_concats++; 
+            m_id = e.attributes[1].textContent.toString().match(/\'missionaryId\':\'[0-9]+\'/).toString().match(/[0-9]+/);
+            m_w = window.open("https://imos.ldschurch.org/imos/imageResource?imageType=MISSIONARY_PROFILE&imageId="+m_id, "_blank");
+            m_w.focus();
+            //tmpNames = tmpNames + e.children[0].innerHTML + "   ";
+        }  
+    })
+}
+
+/* Listen for messages */
+chrome.runtime.onMessage.addListener(function(msg, sender) {
+    /* If the received message has the expected format... */
+    msgText = msg.text.split("!?")[0];
+    msgPayload = msg.text.split("!?").length > 1 ? msg.text.split("!?")[1] : undefined;
+    if (msg.text && (msgText == "getMIDs")) {
+        getMIDs();
+    } else if (msg.text && (msgText == "getMIDsOps")) {
+        if (msgPayload){
+                names = msgPayload;
+                names = names.replace(/\t/g,", ");
+                names = names.split("\n");
+                //alert(names);
+                getMIDsWithNameFilter(names);
+        }
+    } else if (msg.text && msgText == "showPics"){
+        showPics();
+    } else if (msg.text && msgText == "showPicsOps"){
+        if (msgPayload){
+            names = msgPayload;
+            names = names.replace(/\t/g,", ");
+            names = names.split("\n");
+            showPicsWithNameFilter(names)
+        }
+    }
+});
+
+setTimeout(function(){
+    if ($("#listForm").length > 0){
+        document.title = document.title + "kcbListForm";
+    }},1000);var getMissionaryIDsStringOptionsBoxOpen = false;
+var showMissionaryPicsOptionsBoxOpen = false;
+
+document.addEventListener('DOMContentLoaded', function() {
+  
+  chrome.tabs.getSelected(null, function(tab){
+    var url = tab.url;
+    var title = tab.title;
+    console.log(tab);
+    if (url.search("missionary-list.jsf")>= 0 && title.search("kcbListForm")>=0){
+    document.getElementById("missionary-list-page-options").style.display = "block";
+  } else {
+      // We don't have any scripts for this page... because we have no universal scripts yet.
+    document.getElementById("no-page-options").style.display = "block";
+  }
+  })
+  // Show available buttons:
+  
+
+  
+
+  
+  
+  
+  var getMissionaryIDsStringButton = document.getElementById('getMissionaryIDsString');
+  getMissionaryIDsStringButton.addEventListener('click', function(tab) {
+     chrome.tabs.getSelected(null, function(tab){
+      chrome.tabs.sendMessage(tab.id, { text: "getMIDs" }, function(stuff){console.log(stuff)});
+     })
+  }, false);
+  
+  var getMissionaryIDsStringWithOptionsButton = document.getElementById("getMissionaryIDsStringWithOptions");
+  getMissionaryIDsStringWithOptionsButton.addEventListener("click",function(){
+    if (getMissionaryIDsStringOptionsBoxOpen){
+      document.getElementById("getMissionaryIDsStringOptionsBox").style.display = "none";
+      getMissionaryIDsStringOptionsBoxOpen = false;
+    } else {
+      document.getElementById("getMissionaryIDsStringOptionsBox").style.display = "block";
+      getMissionaryIDsStringOptionsBoxOpen = true;
+    }
+  }, false);
+  
+  var submitGetMissionaryIDsStringWithOptionsButton = document.getElementById("submitGetMissionaryIDsStringWithOptions");
+  submitGetMissionaryIDsStringWithOptionsButton.addEventListener('click', function(tab) {
+    names = document.getElementById("getMissionaryIDsStringNamesInput").value;
+     chrome.tabs.getSelected(null, function(tab){
+      chrome.tabs.sendMessage(tab.id, { text: "getMIDsOps!?"+ names}, function(stuff){console.log(stuff)});
+     })
+  }, false);
+  
+  var showMissionaryPics = document.getElementById("showMissionaryPics");
+  showMissionaryPics.addEventListener('click', function(tab) {
+     chrome.tabs.getSelected(null, function(tab){
+      chrome.tabs.sendMessage(tab.id, { text: "showPics" }, function(stuff){console.log(stuff)});
+     })
+  }, false);
+  
+  var showMissionaryPicsWithOptions = document.getElementById("showMissionaryPicsWithOptions");
+  showMissionaryPicsWithOptions.addEventListener("click",function(){
+    if (showMissionaryPicsOptionsBoxOpen){
+      document.getElementById("showMissionaryPicsOptionsBox").style.display = "none";
+      showMissionaryPicsOptionsBoxOpen = false;
+    } else {
+      document.getElementById("showMissionaryPicsOptionsBox").style.display = "block";
+      showMissionaryPicsOptionsBoxOpen = true;
+    }
+    
+  }, false);
+  
+  var submitGetMissionaryIDsStringWithOptionsButton = document.getElementById("submitShowMissionaryPicsWithOptions");
+  submitGetMissionaryIDsStringWithOptionsButton.addEventListener('click', function(tab) {
+    names = document.getElementById("showMissionaryPicsNamesInput").value;
+     chrome.tabs.getSelected(null, function(tab){
+      chrome.tabs.sendMessage(tab.id, { text: "showPicsOps!?"+ names}, function(stuff){console.log(stuff)});
+     })
+  }, false);
+  
+}, false);#getMissionaryIDsStringOptionsBox {
+	display: none;
+}
+
+#showMissionaryPicsOptionsBox {
+	display: none;
+}
+
+body {
+	min-width: 400px;
+	min-height: 250px;
+	padding-top: 70px;
+}
+
+.full {
+	width: 100%;
+}
+
+.text-input-box {
+	min-height: 100px;
+}
+
+.toggling {
+	padding: 20px;
+}
+
+#missionary-list-page-options {
+	display: none;
+}
+
+.page-options {
+	display: none;
+}
+
+.navbar-inverse {
+	height: 60px !important;
+}
+
+.navbar-brand {
+	width: 100%;
+	text-align: right;
+}<!doctype html>
+<html>
+  <head>
+    <title>Secretary Scripter</title>
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="popup.css">
+    <script src="functions.js"></script>
+    <script src="jquery.min.js"></script>
+
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <h1 class="navbar-brand">Secretary Scripts</h1>
+    </nav>
+    <div id="missionary-list-page-options" class="page-options">
+        <button class="full btn btn-primary" id="getMissionaryIDsString">Missionary IDs</button>
+        <button class="full btn btn-primary" id="getMissionaryIDsStringWithOptions">Missionary IDs with Options</button>
+        <div class="toggling" id="getMissionaryIDsStringOptionsBox">
+          <select id="getMissionaryIDsStringOptions">
+              <option>Insert Names</option>
+          </select>
+          <div id="getMissionaryIDsStringOptionNamesBox">
+            <textarea class="text-input-box full" type="textbox" id="getMissionaryIDsStringNamesInput">Surname1, GivenName1
+Surname2, GivenName2
+-or-
+Surname1 < tab > GivenName1
+Surname2 < tab > GivenName2</textarea>
+          </div>
+          <button class="btn btn-warning" id="submitGetMissionaryIDsStringWithOptions">Get strings</button>
+        </div>
+        <button class="full btn btn-primary" id="showMissionaryPics">Show Missionary Pictures</button>
+        <button class="full btn btn-primary" id="showMissionaryPicsWithOptions">Show Missionary Pictures with Options</button>
+        <div class="toggling" id="showMissionaryPicsOptionsBox">
+          <select id="showMissionaryPicsOptions">
+              <option>Insert Names</option>
+          </select>
+          <div id="showMissionaryPicsOptionNamesBox">
+            <textarea class="text-input-box full" type="textbox" id="showMissionaryPicsNamesInput">Surname1, GivenName1
+Surname2, GivenName2
+-or-
+Surname1 < tab > GivenName1
+Surname2 < tab > GivenName2</textarea>
+          </div>
+          <button class="btn btn-warning" id="submitShowMissionaryPicsWithOptions">Show Pics</button>
+        </div>
+     </div>
+     <div class="page-options" id="no-page-options">
+        <h3>There are no scripts for this page.</h3>  
+     </div>
+  </body>
+</html>

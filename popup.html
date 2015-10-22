@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Secretary Scripter</title>
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="popup.css">
+    <script src="functions.js"></script>
+    <script src="jquery.min.js"></script>
+
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <h1 class="navbar-brand">Secretary Scripts</h1>
+    </nav>
+    
+    <!-- For the IMOS Missionary Roster page -->
+     
+    <div id="missionary-list-page-options" class="page-options">
+      
+        <!-- Copy Missionary IDs -->
+      
+        <button class="full btn btn-primary" id="getMissionaryIDsString">Missionary IDs</button>
+        <button class="full btn btn-primary" id="getMissionaryIDsStringWithOptions">Missionary IDs with Options</button>
+        <div class="toggling" id="getMissionaryIDsStringOptionsBox">
+          <select id="getMissionaryIDsStringOptions">
+              <option>Insert Names</option>
+          </select>
+          <div id="getMissionaryIDsStringOptionNamesBox">
+            <textarea class="text-input-box full" type="textbox" id="getMissionaryIDsStringNamesInput">Surname1, GivenName1
+Surname2, GivenName2
+-or-
+Surname1 < tab > GivenName1
+Surname2 < tab > GivenName2</textarea>
+          </div>
+          <button class="btn btn-warning" id="submitGetMissionaryIDsStringWithOptions">Get strings</button>
+        </div>
+        
+        <!-- Show Missionary Pics -->
+        
+        <button class="full btn btn-primary" id="showMissionaryPics">Show Missionary Pictures</button>
+        <button class="full btn btn-primary" id="showMissionaryPicsWithOptions">Show Missionary Pictures with Options</button>
+        <div class="toggling" id="showMissionaryPicsOptionsBox">
+          <select id="showMissionaryPicsOptions">
+              <option>Insert Names</option>
+          </select>
+          <div id="showMissionaryPicsOptionNamesBox">
+            <textarea class="text-input-box full" type="textbox" id="showMissionaryPicsNamesInput">Surname1, GivenName1
+Surname2, GivenName2
+-or-
+Surname1 < tab > GivenName1
+Surname2 < tab > GivenName2</textarea>
+          </div>
+          <button class="btn btn-warning" id="submitShowMissionaryPicsWithOptions">Show Pics</button>
+        </div>
+         
+         <!-- Show Missionary Recommends -->
+         
+        <button class="full btn btn-primary" id="showMissionaryRecommends">Show Missionary Recommends</button>
+        <button class="full btn btn-primary" id="showMissionaryRecommendsWithOptions">Show Missionary Recommends with Options</button>
+        <div class="toggling" id="showMissionaryRecommendsOptionsBox">
+          <select id="showMissionaryRecommendsOptions">
+              <option>Insert Names</option>
+          </select>
+          <div id="showMissionaryRecommendsOptionNamesBox">
+            <textarea class="text-input-box full" type="textbox" id="showMissionaryRecommendsNamesInput">Surname1, GivenName1
+Surname2, GivenName2
+-or-
+Surname1 < tab > GivenName1
+Surname2 < tab > GivenName2</textarea>
+          </div>
+          <button class="btn btn-warning" id="submitShowMissionaryRecommendsWithOptions">Show Recommends</button>
+        </div>
+        
+        <!-- Show Missionary Profiles -->
+        
+        <button class="full btn btn-primary" id="showMissionaryProfiles">Show Missionary Recommends</button>
+        <button class="full btn btn-primary" id="showMissionaryProfilesWithOptions">Show Missionary Recommends with Options</button>
+        <div class="toggling" id="showMissionaryProfilesOptionsBox">
+          <select id="showMissionaryProfilesOptions">
+              <option>Insert Names</option>
+          </select>
+          <div id="showMissionaryProfilesOptionNamesBox">
+            <textarea class="text-input-box full" type="textbox" id="showMissionaryProfilesNamesInput">Surname1, GivenName1
+Surname2, GivenName2
+-or-
+Surname1 < tab > GivenName1
+Surname2 < tab > GivenName2</textarea>
+          </div>
+          <button class="btn btn-warning" id="submitshowMissionaryProfilesWithOptions">Show Recommends</button>
+        </div>
+        
+     </div>
+     
+     <!-- End IMOS Missionary Roster page functions -->
+     
+     
+     <!-- For if there are not other page functions -->
+   
+     <div class="page-options" id="no-page-options">
+        <h3>There are no scripts for this page.</h3>  
+     </div>
+  </body>
+</html>
